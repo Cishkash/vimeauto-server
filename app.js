@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var https = require('https');
+
 var env = require('./.env');
 
 // Create a base64 encoded string from the clientId and secret
@@ -14,9 +15,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var categories = require('./routes/categories');
 
-var app = express();
-
-var bearerToken;
+app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,7 +32,7 @@ app.use('/users', users);
 app.use('/categories', categories);
 
 // Fetch app level bearerToken object
-bearerToken(bearerToken);
+bearerToken(global.bearerToken);
 
 function bearerToken(token) {
   if (token) { return; }
@@ -43,17 +42,20 @@ function bearerToken(token) {
     path: '/oauth/authorize/client?grant_type=client_credentials',
     method: 'POST',
     headers: {
-      'Authorization': 'basic ' + encodedCredentials
+      'Authorization': 'basic ' + encodedCredentials,
+      'Content-Type': 'application/json'
     }
-  }
+  };
 
   var req = https.request(options, (res) => {
+    var datum = [];
     res.on('data', (d) => {
-      process.stdout.write(d);
+      datum.push(d);
+    }).on('end', () => {
+      app.locals.token = JSON.parse(datum);
     });
   });
 
-  bearerToken = req;
   req.end();
 }
 
@@ -63,7 +65,6 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   res.header("Access-Control-Allow-Headers", "Content-Type");
   res.header("Access-Control-Allow-Methods", "GET, POST");
-  res.header("Authorization", 'Bearer ' + bearerToken.access_token);
   console.log('Request url: ' + req.url);
   next();
 });

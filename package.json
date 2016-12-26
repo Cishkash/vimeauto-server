@@ -1,5 +1,7 @@
 {
   "name": "vimeauto-server",
+  "author": "Robby Mitchell",
+  "license": "MIT",
   "version": "0.0.0",
   "private": true,
   "scripts": {
