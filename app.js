@@ -14,6 +14,7 @@ var encodedCredentials = new Buffer(env.clientId + ':' + env.clientSecret).toStr
 var index = require('./routes/index');
 var users = require('./routes/users');
 var categories = require('./routes/categories');
+var trendings = require('./routes/trendings');
 
 app = express();
 
@@ -30,6 +31,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/categories', categories);
+app.use('/trendings', trendings);
+
+// CORS related stuff
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Allow-Methods", "GET, POST");
+  console.log('Request url: ' + req.url);
+  next();
+});
 
 // Fetch app level bearerToken object
 bearerToken(global.bearerToken);
@@ -58,16 +70,6 @@ function bearerToken(token) {
 
   req.end();
 }
-
-// CORS related stuff
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  res.header("Access-Control-Allow-Methods", "GET, POST");
-  console.log('Request url: ' + req.url);
-  next();
-});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
