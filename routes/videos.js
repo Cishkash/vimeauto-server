@@ -23,6 +23,7 @@ router.get('/:video_id', function(req, res, next) {
     }).on('end', () => {
       datum = JSON.parse(datum);
       dataObj.video = datum;
+      dataObj.video.id = 1;
 
       res.send(dataObj);
     });

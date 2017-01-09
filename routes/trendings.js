@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
 
   var options = {
         hostname: 'api.vimeo.com',
-        path: '/videos?filter=trending&per_page=3',
+        path: '/videos?filter=trending&per_page=5',
         method: 'GET',
         headers: {
           'Authorization': 'Bearer ' + app.locals.token.access_token,
@@ -33,9 +33,10 @@ router.get('/', function(req, res, next) {
       datum = JSON.parse(datum);
       dataObj.trendings = datum.data;
 
-      // Assign an id to each category object
+      // Assign an id to each category object and a video id to the video
       dataObj.trendings.forEach((item, index) => {
         item.id = index;
+        item.videoId = item.uri.split('/')[2];
       });
 
       res.send(dataObj);
