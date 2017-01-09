@@ -3,7 +3,12 @@ var https = require('https');
 
 var router = express.Router();
 
+
 router.get('/:video_id', function(req, res, next) {
+  function parseDate(date) {
+    return date.replace(/(?:T|\+)/g, ',').split(',');
+  };
+
   var options = {
         hostname: 'api.vimeo.com',
         path: '/videos/' + req.params.video_id,
@@ -18,12 +23,16 @@ router.get('/:video_id', function(req, res, next) {
   var request = https.request(options, (response) => {
     var datum = '';
     var dataObj = {};
+    var dateArray = [];
     response.on('data', (data) => {
       datum += data.toString('utf-8');
     }).on('end', () => {
       datum = JSON.parse(datum);
+      dateArray = parseDate(datum.created_time);
       dataObj.video = datum;
       dataObj.video.id = 1;
+      dataObj.video.created_date = dateArray[0]
+      dataObj.video.created_time = dateArray[1];
 
       res.send(dataObj);
     });

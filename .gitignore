@@ -5,4 +5,4 @@
 .env
 
 # Logs
-npm-debug.log
+npm-debug.*
