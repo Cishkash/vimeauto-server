@@ -12,9 +12,9 @@ var env = require('./.env');
 var encodedCredentials = new Buffer(env.clientId + ':' + env.clientSecret).toString('base64');
 
 var index = require('./routes/index');
-var users = require('./routes/users');
 var categories = require('./routes/categories');
 var trendings = require('./routes/trendings');
+var videos = require('./routes/videos');
 
 app = express();
 
@@ -29,9 +29,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
 app.use('/categories', categories);
 app.use('/trendings', trendings);
+app.use('/videos', videos);
 
 // Fetch app level bearerToken object
 bearerToken(global.bearerToken);
