@@ -29,6 +29,7 @@ router.get('/', function(req, res, next) {
       // Assign an id to each category object
       dataObj.categories.forEach((item, index) => {
         item.id = index;
+        item.category_key = item.uri.split('/')[2];
       });
 
       res.send(dataObj);
@@ -38,7 +39,7 @@ router.get('/', function(req, res, next) {
   request.on('error', () => {
     res.send('An error occurred');
   });
-  
+
   request.end();
 });
 

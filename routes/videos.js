@@ -24,15 +24,18 @@ router.get('/:video_id', function(req, res, next) {
     var datum = '';
     var dataObj = {};
     var dateArray = [];
+
     response.on('data', (data) => {
       datum += data.toString('utf-8');
     }).on('end', () => {
       datum = JSON.parse(datum);
       dateArray = parseDate(datum.created_time);
+
       dataObj.video = datum;
-      dataObj.video.id = 1;
+
       dataObj.video.created_date = dateArray[0]
       dataObj.video.created_time = dateArray[1];
+      dataObj.video.id = 1;
 
       res.send(dataObj);
     });
