@@ -36,8 +36,39 @@ router.get('/', function(req, res, next) {
     });
   });
 
-  request.on('error', () => {
-    res.send('An error occurred');
+  request.on('error', (error) => {
+    res.send( error );
+  });
+
+  request.end();
+});
+
+router.get('/videos/:category_id', function(req, res, next) {
+  var options = {
+    hostname: 'api.vimeo.com',
+    path: '/categories/' + req.params.category_id + '/videos?per_page=5',
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer ' + app.locals.token.access_token,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.vimeo.*+json;version=3.2'
+    }
+  };
+
+  var request = https.request(options, (response) => {
+    var datum = '';
+    var dataObj = {};
+
+    response.on('data', (data) => {
+      datum += data.toString('utf-8');
+    }).on('end', () => {
+      dataObj = JSON.parse(datum);
+      res.send(dataObj.data);
+    });
+  });
+
+  request.on('error', (error) => {
+    res.send( error );
   });
 
   request.end();
