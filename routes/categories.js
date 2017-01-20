@@ -72,7 +72,7 @@ router.get('/videos/:category_id', function(req, res, next) {
 
   var options = {
     hostname: 'api.vimeo.com',
-    path: '/categories/' + req.params.category_id + '/videos?per_page=10',
+    path: '/categories/' + req.params.category_id + '/videos?per_page=12',
     method: 'GET',
     headers: {
       'Authorization': 'Bearer ' + app.locals.token.access_token,
